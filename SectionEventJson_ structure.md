@@ -21,7 +21,7 @@
 ### Battle
 전투씬을 출력하는 노드, Battle1 Battle2 ... 등으로 작성 
 - **battleIntro** :전투 시작 전 인트로 내용을 적는 노드, 리스트를 사용하여 여러 문장을 나누어 작성
-- **battleOrder** : 전투 진행 순서를 결정하는 노드, 적은 코드 명 플레이어는 `player`로 표기, 리스트 앞쪽 순서부터 순서대로 진행
+- **battleOrder** : 전투 진행 순서를 결정하는 노드, 적의 코드 명 혹은 `player`로 표기, 리스트 앞쪽 순서부터 순서대로 진행
 - **battleTriggers** : 전투시 적용할 특성
 - **BattleWin** : 전투 승리 시 다음 출력을 위한 노드 키값, `PostBattle1_W`, `PostBattle2_W` ... 의 형태로 작성, 본문이 출력된 후 해당 노드로 이동
 - **BattleLose** : 전투 패배 시 다음 출력을 위한 노드 키값, `PostBattle1_L`, `PostBattle2_L` ... 의 형태로 작성, 본문이 출력된 후 해당 노드로 이동
