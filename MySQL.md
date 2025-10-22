@@ -4,6 +4,18 @@ USE cnwvdb_s0;
 -- ====== cnwvdb_s1 ======
 USE cnwvdb_s1;
 
+SELECT * FROM friends;
+SELECT * FROM inventory_weapons;
+SELECT * FROM inventory_items;
+SELECT * FROM inventories;
+SELECT * FROM flag_data;
+SELECT * FROM users;
+SELECT * FROM friend_requests;
+SELECT * FROM player_stats;
+SELECT * FROM player_saves;
+SELECT * FROM player_visited_sections;
+SELECT * FROM player_skills;
+
 SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS inventory_weapons;
@@ -114,4 +126,48 @@ CREATE TABLE IF NOT EXISTS player_stats (
   CONSTRAINT fk_player_stats_user
     FOREIGN KEY (user_id) REFERENCES users(id)
     ON DELETE CASCADE
+);
+
+-- 저장 슬롯 (1:1)
+CREATE TABLE player_saves (
+  user_id            BIGINT      NOT NULL PRIMARY KEY,
+  player_name        VARCHAR(100) NOT NULL,
+  origin_seed        INT          NOT NULL,
+  pos_x              DOUBLE       NOT NULL,
+  pos_y              DOUBLE       NOT NULL,
+  pos_z              DOUBLE       NOT NULL,
+  current_section_id VARCHAR(100) NOT NULL DEFAULT '',
+  pre_section_id     VARCHAR(100) NOT NULL DEFAULT '',
+  tutorial_clear     BOOLEAN      NOT NULL DEFAULT FALSE,
+  version            BIGINT       NOT NULL DEFAULT 0,   -- 낙관적 락
+  created_at         TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at         TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_player_saves_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
+-- 방문 섹션 목록 (리스트)
+CREATE TABLE player_visited_sections (
+  user_id    BIGINT      NOT NULL,
+  section_id VARCHAR(100) NOT NULL,
+  created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (user_id, section_id),
+  CONSTRAINT fk_pv_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
+-- 플레이어 스킬
+CREATE TABLE player_skills (
+  user_id     BIGINT       NOT NULL,
+  skill_code  VARCHAR(100) NOT NULL,
+  skill_level INT          NOT NULL DEFAULT 1,
+  created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  PRIMARY KEY (user_id, skill_code),
+  CONSTRAINT fk_player_skills_user_s1
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON UPDATE CASCADE ON DELETE CASCADE
 );
